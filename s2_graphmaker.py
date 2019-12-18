@@ -129,11 +129,7 @@ if __name__ == "__main__":
     pprint("Constructing gmdata...")
     gmdata = construct_gmdata(**options)
 
-    Db = get_Db(gmdata.D)
-    gmdata_Db = copy.copy(gmdata)
-    # separate distance, Dirac operator
-    gmdata_Db.distances = {}
-    gmdata_Db.D = Db
+    gmdata_Db = construct_gmdata(do_Db=True,**options)
     pprint("Done initializing.")
 
     if options['inputbasename'] is not None:
