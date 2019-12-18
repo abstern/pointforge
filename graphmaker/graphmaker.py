@@ -34,10 +34,11 @@ class GraphmakerData(DistanceParameters,
     """Contains both the distance graph and the parameters required to
     grow it."""
 
-    def __init__(self, distances={}, nthreads=1, **kwargs):
+    def __init__(self, nthreads=1, **kwargs):
         DistanceParameters.__init__(self, **kwargs)
         StateFinderParameters.__init__(self, **kwargs)
-        self.distances = distances
+        self.states = []
+        self.distances = {}
         self.nthreads = nthreads
         self.evals = np.linalg.eigvals(self.D)
         self.maxstates = estimate_state_num_bound(self.evals)
