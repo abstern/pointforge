@@ -143,7 +143,6 @@ if __name__ == "__main__":
             statesDb, distancesDb = read_npz(options['inputbasename'] + " Db")
 
             gmdata.states = states
-            gmdata_Db.states = gmdata.states
 
             gmdata.distances = distances
             gmdata_Db.distances = distancesDb
@@ -151,6 +150,8 @@ if __name__ == "__main__":
         except FileNotFoundError:
             print("Input file does not exist, starting from scratch.")
 
+    gmdata_Db.states = gmdata.states
+            
     outputbasename = options['outputbasename']
     hook = options['hook']
 
