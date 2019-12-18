@@ -71,7 +71,7 @@ def find_distances_inplace(gmdata, combinations):
         pprint("...done.")
 
 
-def finish_distance_graph_inplace(gmdata):
+def finish_distance_graph_inplace(gmdata, max_dist_calculations=None):
     """Calculate missing distances, append to gmdata.distances."""
     states, dists = gmdata.states, gmdata.distances
     trivial_distances = {(state, state): 0 for state in states}
@@ -80,6 +80,8 @@ def finish_distance_graph_inplace(gmdata):
     existing_combinations = [pair for pair in dists.keys() if dists[pair]]
     missing_combinations = [pair for pair in combinations if pair not
                             in existing_combinations]
+    if max_dist_calculations:
+        missing_combinations = missing_combinations[0:max_dist_calculations]
     find_distances_inplace(gmdata, missing_combinations)
 
 
@@ -88,14 +90,14 @@ def pprint(string):
     print(prefix + string, flush=True)
 
 
-def increment_graph(gmdata, steps=1):
+def increment_graph(gmdata, steps=1, max_dist_calculations=None):
     """Increment the graph in gmdata."""
 
     for step in range(steps):
         pprint("Adding state...")
         append_state_inplace(gmdata)
     pprint("Updating distances...")
-    finish_distance_graph_inplace(gmdata)
+    finish_distance_graph_inplace(gmdata, max_dist_calculations)
     pprint("Succeeded, appending: we have {} states.".format(
         len(gmdata.states)))
 
