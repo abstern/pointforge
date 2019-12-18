@@ -4,40 +4,31 @@ import math
 import numpy as np
 import scipy.sparse
 
-from graphmaker.graphmaker import GraphmakerData
 from twosphere.twosphere import TwoSphere
 
 """Setup GraphmakerData for the Dirac sphere of given size."""
 
 
-def construct_gmdata(spinorsize, inputbasename=None, nthreads=1,
+def prepare_gmdata(spinorsize, inputbasename=None, nthreads=1,
                      pot_coupling=3, cvxsolver_args={"eps": 10**-2,
                                                      "solver": "SCS",
                                                      "verbose": False},
-                     do_Db=False,
                      **kwargs):
-    """Construct a GraphmakerData object for the standard Dirac sphere
+    """Prepare arguments for a GraphmakerData object for the standard Dirac sphere
     of given rank."""
     sphere = TwoSphere(spinorsize)
-    D0 = sphere.DiracS2
+    D = sphere.DiracS2
     gmargs = {}
     gmargs['coordinates'] = get_coordinates(sphere)
     gmargs['sq_coordinates'] = get_sq_coordinates(spinorsize)
-    if do_Db:
-        D = get_Db(D0)
-        gmargs['D'] = get_Db(D0)
-    else:
-        D = D0
     gmargs['D'] = D
     gmargs['alg_generators'] = get_spherical_harmonics(
         spinorsize, sphere, D)
     gmargs['pot_coupling'] = pot_coupling
     gmargs['cvxsolver_args'] = cvxsolver_args
     gmargs['nthreads'] = nthreads
-    
-    gmdata = GraphmakerData(**gmargs)
 
-    return gmdata
+    return gmargs
 
 
 def get_Db(D):

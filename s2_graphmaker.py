@@ -7,13 +7,14 @@ import copy
 import time
 import subprocess
 
-from s2_init import construct_gmdata, get_Db
+from s2_init import prepare_gmdata, get_Db
 from graphmaker.graphmaker import (increment_graph, writeout,
                                    read_npz, as_distancearray,
                                    pprint)
 from graphmaker.smacof.smacof import (SMACOF, run_embedding,
                                       WeightedDistanceGraph)
 from graphmaker.smacof.smacof import writeout as smacof_write_bin
+from graphmaker.graphmaker import GraphmakerData
 
 
 """Construct and embed metric graphs associated to (PC(S^2)P,
@@ -127,9 +128,12 @@ def loop_expand_big_graph(gmdataD, gmdataDb, outputbasename, duration, hook):
 if __name__ == "__main__":
     options = parse_arguments()
     pprint("Constructing gmdata...")
-    gmdata = construct_gmdata(**options)
+    gmargs = prepare_gmdata(**options)
+    gmdata = GraphmakerData(**gmargs)
 
-    gmdata_Db = construct_gmdata(do_Db=True,**options)
+    gmargs_Db = copy.copy(gmargs)
+    gmargs_Db['D'] = get_Db(gmargs['D'])
+    gmdata_Db = GraphmakerData(**gmargs_Db)
     pprint("Done initializing.")
 
     if options['inputbasename'] is not None:
